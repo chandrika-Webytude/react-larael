@@ -1,8 +1,7 @@
-import Header from './Header'
 import React, { useState, useEffect } from "react";
 import '../App.css';
-import { Button } from "react-bootstrap";
-import { useNavigate, Link } from 'react-router-dom';
+// import { Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 
 function EmployeesList() {
     const [data, dataSet] = useState([])
@@ -16,29 +15,43 @@ function EmployeesList() {
         }
         fetchMyAPI()
     }, [])
-    const history = useNavigate();
 
     async function deleteEmployee(id) {
-
-        // let item = { first_name, middle_name, last_name, ctc, email, email_company }
-        let result = await fetch("http://localhost:8000/api/deleteEmployee/"+id, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify()
+        let result = await fetch("http://localhost:8000/api/deleteEmployee/" + id, {
+            method: 'DELETE',
         });
         result = await result.json();
         console.warn("result", result);
-        history("EmployeeEdit/"+id);
+        getData()
     }
+    async function getData() {
+        let result = await fetch("http://localhost:8000/api/EmployeesList", {
+            method: 'POST',
+        });
+        result = await result.json();
+        dataSet(result);
+    }
+
+    async function editEmployee(id) {
+        let result = await fetch("http://localhost:8000/api/editEmployee/" + id, {
+            method: 'POST',
+        });
+        result = await result.json();
+        console.warn("result", result);
+        // getData()
+    }
+    // async function getData() {
+    //     let result = await fetch("http://localhost:8000/api/EmployeesList", {
+    //         method: 'POST',
+    //     });
+    //     result = await result.json();
+    //     dataSet(result);
+    // }
 
 
 
     return (
         <div>
-            <Header />
             <div className="dashboard">
                 <div className="dashboard-main">
                     <div className="dashboard-tab">
@@ -56,36 +69,37 @@ function EmployeesList() {
                             </div>
                         </div>
                         <table className="table">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>first_name</th>
-                                <th>middle_name</th>
-                                <th>last_name</th>
-                                <th>ctc</th>
-                                <th>email</th>
-                                <th>email_company</th>
-                                <th>Action</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>first_name</th>
+                                    <th>middle_name</th>
+                                    <th>last_name</th>
+                                    <th>ctc</th>
+                                    <th>email</th>
+                                    <th>email_company</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {data.map((item, index) => (
-                                <tr key={item.id}>
-                                    <td>{++index}</td>
-                                    <td>{item.first_name}</td>
-                                    <td>{item.middle_name}</td>
-                                    <td>{item.last_name}</td>
-                                    <td>{item.ctc}</td>
-                                    <td>{item.email}</td>
-                                    <td>{item.email_company}</td>
-                                    <td>
-                                    <Link to={"EmployeeEdit/"+item.id}><span className='btn btn-success'>Edit</span></Link>
-                                        <button  onClick={() => { deleteEmployee(item.id) }} className='btn btn-danger'>Delete</button>
-                                    </td>
-                    
-                                </tr>
-                            ))}
-                             </tbody>
+                                {data.map((item, index) => (
+                                    <tr key={item.id}>
+                                        <td>{++index}</td>
+                                        <td>{item.first_name}</td>
+                                        <td>{item.middle_name}</td>
+                                        <td>{item.last_name}</td>
+                                        <td>{item.ctc}</td>
+                                        <td>{item.email}</td>
+                                        <td>{item.email_company}</td>
+                                        <td>
+                                            <Link to={"/editEmployee/"+item.id}><span className='btn btn-success'>Edit</span></Link>
+                                            {/* <span onClick={() => { editEmployee(item.id) }} className='btn btn-success'>Edit</span> */}
+                                            <span onClick={() => { if(window.confirm('Are you sure to delete this record ?')) deleteEmployee(item.id) }} className='btn btn-danger'>Delete</span>
+                                        </td>
+
+                                    </tr>
+                                ))}
+                            </tbody>
                         </table>
                     </div>
                 </div>

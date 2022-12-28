@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 function Login() {
 
@@ -32,7 +31,7 @@ function Login() {
     }
 
     return (
-        <>                <Header />
+        <>              
 
             <div className="col-sm-6 offset-sm-3 top" >
                 <h1>Register page</h1>

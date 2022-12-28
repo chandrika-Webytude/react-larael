@@ -1,8 +1,9 @@
-import Header from "./Header";
 import React, { useState, useEffect } from "react";
 // import { Table, } from "react-bootstrap";
 // import './App.css';
 import { Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
+import Sidebar from './Sidebar'
 
 function LeaveHistory() {
     const [data, dataSet] = useState([])
@@ -74,9 +75,10 @@ function LeaveHistory() {
 
     return (
         <div>
-            <Header />
             <div className="dashboard height">
                 <div className="dashboard-main">
+
+            < Sidebar/>
                     <div className="dashboard-form">
                         <div className="table-top">
                             <div className="page-title">
@@ -110,7 +112,8 @@ function LeaveHistory() {
                                         {/* <td><img src={"http://localhost:8000/" + item.file}></img></td> */}
                                         <td>
 
-                                            <span className="edit">Edit</span>
+                                            <Link to={"/UpdateLeave/" + item.id}><span className='btn btn-success'>Edit</span></Link>
+
                                             {/* <span onClick={() => { deleteOpration(item.id) }} className="delete">Delete</span> */}
                                             {/* <button onClick={deletePerson} id="remove-button">REMOVE</button> */}
                                         </td>

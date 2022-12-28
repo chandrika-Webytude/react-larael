@@ -31,6 +31,11 @@ function Header() {
                                 <Link to='/'>Leave History</Link>
                                 <Link to='/Holidays'>Holidays</Link>
                                 <Link to='/EmployeesList'>EmployeesList</Link>
+                                <Link to='/PersonalDetails'>PersonalDetails</Link>
+                                {/* <Link to='/EditHoliday'>EditHoliday</Link> */}
+
+
+                                {/* <Link to='/Holidays'>Hrms Holidays</Link> */}
                             </>
                             :
                             <>

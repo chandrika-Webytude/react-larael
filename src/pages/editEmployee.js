@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-function Employee() {
+import { useNavigate, useParams } from 'react-router-dom';
+
+function EmployeeEdit(props) {
+    console.warn("props", props)
+    // console.warn("props",props.match.params.id)
+    const [data, dataSet] = useState([])
+    const { id } = useParams();
+
     const [first_name, setfirst_name] = useState("");
     const [middle_name, setmiddle_name] = useState("");
     const [last_name, setlast_name] = useState("");
@@ -9,10 +15,10 @@ function Employee() {
     const [email_company, setemail_company] = useState("");
     const history = useNavigate();
 
-    async function addEmployee() {
+    async function updateEmployee(id) {
 
         let item = { first_name, middle_name, last_name, ctc, email, email_company }
-        let result = await fetch("http://localhost:8000/api/employee", {
+        let result = await fetch("http://localhost:8000/api/updateEmployee/" + id, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -24,6 +30,22 @@ function Employee() {
         console.warn("result", result);
         history('/EmployeesList');
     }
+
+
+    useEffect(() => {
+        getUsers()
+    }, []);
+
+
+    async function getUsers() {
+        let result = await fetch("http://localhost:8000/api/editEmployee/" + id, {
+            method: 'POST',
+        });
+        result = await result.json()
+        dataSet(result)
+        console.warn("result", result);
+    }
+
     return (
         <div>
             <div className="dashboard height">
@@ -35,7 +57,7 @@ function Employee() {
                             </div>
                         </div><br></br>
                         <label>First Name</label>
-                        <input type="text" value={first_name} onChange={(e) => setfirst_name(e.target.value)} className="form-control" />
+                        <input type="text" value={data.first_name} onChange={(e) => setfirst_name(e.target.value)} className="form-control" />
                         <label>Middle Name</label>
                         <input type="text" value={middle_name} onChange={(e) => setmiddle_name(e.target.value)} className="form-control" />
                         <label>Last Name</label>
@@ -46,10 +68,10 @@ function Employee() {
                         <input type="text" value={email} onChange={(e) => setemail(e.target.value)} className="form-control" />
                         <label>Email Company</label>
                         <input type="text" value={email_company} onChange={(e) => setemail_company(e.target.value)} className="form-control" />
-                        {/* <br></br><button onClick={addEmployee} className="btn btn-primary">Submit</button> */}
+                        {/* <br></br><button onClick={updateEmployee} className="btn btn-primary">Submit</button> */}
                         <div className="form-submit">
                             {/* <input type="hidden" name="id"> */}
-                            <input type="submit" className="btn btn-primary" name="employee" onClick={addEmployee} value="Submit" />
+                            <input type="submit" className="btn btn-primary" name="employee" onClick={updateEmployee} value="Submit" />
                         </div>
                     </div>
                 </div >
@@ -57,4 +79,5 @@ function Employee() {
         </div>
     )
 }
-export default Employee
+export default EmployeeEdit
+
