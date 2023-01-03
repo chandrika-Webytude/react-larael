@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import '../App.css';
-// import { Button } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; import Sidebar from './Sidebar'
+import Header from './Header'
 
 function EmployeesList() {
     const [data, dataSet] = useState([])
@@ -32,27 +32,11 @@ function EmployeesList() {
         dataSet(result);
     }
 
-    async function editEmployee(id) {
-        let result = await fetch("http://localhost:8000/api/editEmployee/" + id, {
-            method: 'POST',
-        });
-        result = await result.json();
-        console.warn("result", result);
-        // getData()
-    }
-    // async function getData() {
-    //     let result = await fetch("http://localhost:8000/api/EmployeesList", {
-    //         method: 'POST',
-    //     });
-    //     result = await result.json();
-    //     dataSet(result);
-    // }
-
-
-
     return (
-        <div>
+        <section className="main">
+            <Header />
             <div className="dashboard">
+                <Sidebar />
                 <div className="dashboard-main">
                     <div className="dashboard-tab">
                         <div className="table-top">
@@ -62,8 +46,7 @@ function EmployeesList() {
                             <div className="dashboard-nav">
                                 <ul className="navbar-nav">
                                     <li>
-                                        <a target="_blank" href="Employee" className="navbar-item active">Add Employee<span>
-                                            &#8594; </span></a>
+                                        <Link to='/Employee' className="navbar-item active">Add Employee<span> &#8594; </span></Link>
                                     </li>
                                 </ul>
                             </div>
@@ -92,11 +75,9 @@ function EmployeesList() {
                                         <td>{item.email}</td>
                                         <td>{item.email_company}</td>
                                         <td>
-                                            <Link to={"/editEmployee/"+item.id}><span className='btn btn-success'>Edit</span></Link>
-                                            {/* <span onClick={() => { editEmployee(item.id) }} className='btn btn-success'>Edit</span> */}
-                                            <span onClick={() => { if(window.confirm('Are you sure to delete this record ?')) deleteEmployee(item.id) }} className='btn btn-danger'>Delete</span>
+                                            <Link to={"/editEmployee/" + item.id}><span className="edit" style={{ "--color": "green" }} ><i className="fa-solid fa-pen-to-square"></i></span></Link>
+                                            <Link onClick={() => { if (window.confirm('Are you sure to delete this record?')) deleteEmployee(item.id) }}><span className="trash" style={{ "--color": "red" }}><i className="fa-solid fa-trash"></i></span></Link>
                                         </td>
-
                                     </tr>
                                 ))}
                             </tbody>
@@ -104,7 +85,7 @@ function EmployeesList() {
                     </div>
                 </div>
             </div >
-        </div >
+        </section >
     )
 }
 export default EmployeesList

@@ -1,131 +1,121 @@
 import React, { useState, useEffect } from "react";
-// import { Table, } from "react-bootstrap";
-// import './App.css';
 import { Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar'
+import Header from './Header'
+import http from "./http"
 
 function LeaveHistory() {
     const [data, dataSet] = useState([])
     useEffect(() => {
-        async function fetchMyAPI() {
-            let response = await fetch("http://localhost:8000/api/LeaveHistory", {
-                method: 'POST',
-            });
-            response = await response.json();
-            dataSet(response)
-        }
-        fetchMyAPI()
-    }, [])
+        fetchAllUsers();
+    }, []);
 
+    const fetchAllUsers = () => {
+        http.post('/LeaveHistory').then(res => {
+            dataSet(res.data);
+        })
+    }
 
-
-    // async function deleteOpration(id){
-    //     let result=await fetch("http://localhost:8000/api/delete/"+id,{
-    //         method:'DELETE'
-    //     });
-    //     result=await result.json();
-    //     console.warn(result)
-    //     getData(result)
-    // }
-    // async function getData(){
-    //     let result=await fetch("http://localhost:8000/api/LeaveHistory");
-    //     result = await result.json();
-    //     getData(result)
-    // }
-
-
-    // const deletePerson = async (person) => {
-    //     await fetch(`http://localhost:8000/api/delete/${person.id}`, {
-    //       method: "DELETE",
-    //       headers: {
-    //         "Content-type": "application/json"
-    //       }
-    //     })
-    //     await setPeople(people.filter(_person => _person.id !== person.id))
-    //   }
-
-    // async function deleteLeave(id) {
-    //     let result = await fetch("http://localhost:8000/api/deleteLeave/" + id, {
-    //         method: 'DELETE',
-    //     });
-    //     result = await result.json();
-    //     console.warn(result)
-    // }
-
-
-
-    // function deleteLeave(id) {
-    //     fetch('http://localhost:8000/api/delete-student/' + id, {
-    //         method: 'POST',
-    //         //   body: JSON.stringify({
-    //         //     _method: 'PUT'
-    //         //   })
-    //     }).then((res) => res.json())
-    //         .then((response) => {
-    //             // console.log(response)
-    //         })
-    // }
-
-
-    // deleteLeave = (e, id) =>{
-    //     const result =
-    // }
-
-
+    const deleteUser = (id) => {
+        http.delete('/deleteLeave/' + id).then(res => {
+            fetchAllUsers();
+        })
+    }
     return (
-        <div>
-            <div className="dashboard height">
-                <div className="dashboard-main">
+        <>
+            {/* <!-- Main --> */}
+            <section className="main">
+                <Header />
+                <div className="dashboard">
+                    <Sidebar />
+                    <div className="dashboard-main">
+                        <div className="dashboard-tab">
+                            <div className="table-top">
+                                <div className="page-title">
+                                    <h2>Leave Details</h2>
+                                </div>
+                                <form method="get" action="" name="name" className="filter-dropdown">
+                                    <div className="dashboard-nav">
+                                        <ul className="navbar-nav">
+                                            <li>
+                                                <select name="month" className="form-control">
+                                                    <option defaultValue="">Select Month</option>
 
-            < Sidebar/>
-                    <div className="dashboard-form">
-                        <div className="table-top">
-                            <div className="page-title">
-                                <h2>Leave Details</h2>
+                                                    <option defaultValue="1">1</option>
+                                                </select>
+                                            </li>
+
+                                            <li>
+                                                <select name="year" className="form-control">
+                                                    <option defaultValue="">Select Year</option>
+                                                    <option defaultValue="d">12</option>
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <a href="?filter=custom" className="navbar-item custom-date-trigger">Custom Date</a>
+                                            </li>
+                                        </ul>
+                                        <input type="hidden" name="filter" defaultValue="yes" />
+                                        <div className="custom-date">
+                                            <div className="date-main">
+                                                <div className="from-date">
+                                                    <input type="text" className="datepickerFrom" id="FromEditDate" placeholder="From" name="From" defaultValue="1" autoComplete="off" />
+                                                </div>
+                                                <div className="to-date">
+                                                    <input type="text" id="ToEditDate" className="datepickerTo" placeholder="To" name="To" defaultValue="1" autoComplete="off" />
+                                                </div>
+                                                <div className="go-date">
+                                                    <input type="hidden" name="filter" defaultValue="custom" />
+                                                    <input type="submit" className="btn btn-primary" name="Go" defaultValue="Go" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>from date</th>
-                                    <th>to date</th>
-                                    <th>reason</th>
-                                    <th>projects</th>
-                                    <th>note</th>
-                                    {/* <th>file</th> */}
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                {data.map((item, index) => (
-                                    <tr key={item.id}>
-                                        <td>{++index}</td>
-                                        <td>{item.from_date}</td>
-                                        <td>{item.to_date}</td>
-                                        <td>{item.reason}</td>
-                                        <td>{item.projects}</td>
-                                        <td>{item.note}</td>
-                                        {/* <td><img src={"http://localhost:8000/" + item.file}></img></td> */}
-                                        <td>
-
-                                            <Link to={"/UpdateLeave/" + item.id}><span className='btn btn-success'>Edit</span></Link>
-
-                                            {/* <span onClick={() => { deleteOpration(item.id) }} className="delete">Delete</span> */}
-                                            {/* <button onClick={deletePerson} id="remove-button">REMOVE</button> */}
-                                        </td>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Name</th>
+                                        <th>Leaves</th>
+                                        <th>From Date</th>
+                                        <th>To Date </th>
+                                        <th>Projects</th>
+                                        <th>Fill up Date</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
-                                ))}
-
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {data.map((item, index) => (
+                                        <tr key={item.id}>
+                                            <td>{++index}</td>
+                                            <td>test</td>
+                                            <td>2</td>
+                                            <td>{item.from_date}</td>
+                                            <td>{item.to_date}</td>
+                                            <td>{item.reason}</td>
+                                            <td>{item.projects}</td>
+                                            <td>{item.note}</td>
+                                            {/* <td>
+                                                <button type="button" className="btn btn-danger" onClick={() => { if (window.confirm('Are you sure to delete this record?')) deleteUser(item.id) }} >Delete</button>
+                                                <Link to={"/UpdateLeave/" + item.id}><span className='btn btn-success'>Edit</span></Link>
+                                            </td> */}
+                                            <td>
+                                                <Link to={"/UpdateLeave/" + item.id}><span className="edit" style={{ "--color": "green" }} ><i className="fa-solid fa-pen-to-square"></i></span></Link>
+                                                <Link onClick={() => { if (window.confirm('Are you sure to delete this record?')) deleteUser(item.id) }}><span className="trash" style={{ "--color": "red" }}><i className="fa-solid fa-trash"></i></span></Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section >
+        </>
     )
 }
 export default LeaveHistory

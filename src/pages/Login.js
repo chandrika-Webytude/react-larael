@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-function Login() {
 
+function Test_login() {
+
+    const [email, setemail] = useState("");
+    const [password, setpassword] = useState("");
+
+    const history = useNavigate();
     useEffect(() => {
         if (localStorage.getItem('user-info')) {
             history('/leave');
         }
     }, [])
 
-    const [name, setname] = useState("");
-    const [email, setemail] = useState("");
-    const [password, setpassword] = useState("");
-    const history = useNavigate();
-
-    async function login1() {
-        let item = { name, email, password }
-        let result = await fetch("http://localhost:8000/api/login", {
+    async function login1(event) {
+        event.preventDefault();
+        let item = { email, password }
+        let result = await fetch("http://localhost:8000/api/test_login", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -24,27 +25,44 @@ function Login() {
             body: JSON.stringify(item)
         });
         result = await result.json();
-        console.warn("result", result);
-        localStorage.setItem("user-info", JSON.stringify(result));
-        // history.push("/leave")
+        console.log(result);
+        // console.log(result.id);
+        localStorage.setItem("user-info", JSON.stringify(result.id));
         history('/leave');
     }
 
     return (
-        <>              
+        <>
+            <section className="main">
+                <div className="dashboard">
+                    <div className="dashboard-main">
+                        <div className="dashboard-form">
+                            <div className="table-top">
+                                <div className="page-title">
+                                    <h2>Login</h2>
+                                </div>
+                            </div>
 
-            <div className="col-sm-6 offset-sm-3 top" >
-                <h1>Register page</h1>
-                <label>Name</label>
-                <input type="text" value={name} onChange={(e) => setname(e.target.value)} className="form-control" />
-                <label>Email</label>
-                <input type="text" value={email} onChange={(e) => setemail(e.target.value)} className="form-control" />
-                <label>Password</label>
-                <input type="password" value={password} onChange={(e) => setpassword(e.target.value)} className="form-control" />
-                <br></br><button onClick={login1} className="btn btn-primary">Submit</button>
-            </div>
+                            <form className="row" >
+                                <div className="from_date">
+                                    <label htmlFor="" className="form-label">Email</label>
+                                    <input type="text" className="form-control mb-2" onChange={(e) => setemail(e.target.value)} />
+                                </div>
+                                <div className="Password">
+                                    <label htmlFor="" className="form-label">Password</label>
+                                    <input type="password" onChange={(e) => setpassword(e.target.value)} className="form-control mb-2" />
+                                </div>
+                                <div className="form-submit">
+                                    <input type="submit" className="btn btn-primary" name="employee" onClick={login1} value="Submit" />
+                                </div>
+                            </form>
+
+                        </div>
+                    </div >
+                </div>
+            </section >
         </>
 
     )
 }
-export default Login
+export default Test_login

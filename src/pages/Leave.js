@@ -1,62 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-function Leave() {
-    const [from_date, setfrom_date] = useState("");
-    const [to_date, setto_date] = useState("");
-    const [file, setfile] = useState("");
-    const [reason, setreason] = useState("");
-    const [projects, setprojects] = useState("");
-    const [note, setnote] = useState("");
-    const history = useNavigate();
-    async function addLeave() {
+import Header from './Header'
+import Sidebar from './Sidebar'
+import http from './http'
 
-        let item = { from_date, to_date, reason, file, projects, note }
-        let result = await fetch("http://localhost:8000/api/leave", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(item)
-        });
-        result = await result.json();
-        console.warn("result", result);
-        // localStorage.setItem("user-info", JSON.stringify(result));
-        history('/');
+function Leave() {
+
+    const navigate = useNavigate();
+    const [inputs,setInputs] = useState({});
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({...values,[name]:value}))
+    }
+
+    const submitForm = () =>{
+        http.post('/leave',inputs).then((res)=>{
+            navigate('/');
+        })
     }
     return (
-        <div>
-            {/* <div className="col-sm-6 offset-sm-3 top" > */}
-            <div className="dashboard height">
-                <div className="dashboard-main">
-                    <div className="dashboard-form">
-                        <div className="table-top">
-                            <div className="page-title">
-                                <h2>Leave Application Form</h2>
+        <>
+            <div>
+                {/* <!-- Main --> */}
+                <section className="main">
+                    <Header />
+                    <div className="dashboard">
+                        <Sidebar />
+                        <div className="dashboard-main">
+                            <div className="dashboard-form">
+                                <div className="table-top">
+                                    <div className="page-title">
+                                        <h2>Leave Application Form</h2>
+                                    </div>
+                                </div>
+                                <form name="leave_form" method="POST" action="" className="row" >
+                                    <div className="from_date col-md-6">
+                                        <label htmlFor="" className="form-label">From Date</label>
+                                        <input type="date" name="from_date" className="form-control mb-2" value={inputs.from_date || ''} onChange={handleChange} autoComplete="off" />
+                                    </div>
+                                    <div className="to_date col-md-6">
+                                        <label htmlFor="" className="form-label">To Date</label>
+                                        <input type="date" name="to_date" className="form-control mb-2" value={inputs.to_date || ''} onChange={handleChange}  autoComplete="off" />
+                                    </div>
+                                    <div className="projects">
+                                        <label htmlFor="" className="form-label">File</label>
+                                        <input type="file" name="file" className="form-control mb-2" value={inputs.file || ''} onChange={handleChange} />
+                                    </div>
+                                    <div className="reason">
+                                        <label htmlFor="" className="form-label">Reason for the Leave</label>
+                                        <input type="text" name="reason" className="form-control mb-2" value={inputs.reason || ''} onChange={handleChange} />
+                                    </div>
+                                    <div className="projects">
+                                        <label htmlFor="" className="form-label">Your Current Working projects</label>
+                                        <input type="text" name="projects" className="form-control mb-2" value={inputs.projects || ''} onChange={handleChange} />
+                                    </div>
+                                    <div className="note">
+                                        <label htmlFor="" className="form-label">Note</label>
+                                        <input type="text" name="note" className="form-control mb-2" value={inputs.note || ''} onChange={handleChange} />
+
+                                    </div>
+                                    <div className="form-submit">
+                                        <button type="button" onClick={submitForm} className="btn btn-primary">Create</button>
+
+                                    </div>
+                                </form>
+
                             </div>
-                        </div>
-                        <label>From Date</label>
-                        <input type="date" value={from_date} onChange={(e) => setfrom_date(e.target.value)} className="form-control" />
-                        <label>To Date</label>
-                        <input type="date" value={to_date} onChange={(e) => setto_date(e.target.value)} className="form-control" />
-                        <label>Reason for the Leave</label>
-                        <input type="text" value={reason} onChange={(e) => setreason(e.target.value)} className="form-control" />
-                        <label>File</label>
-                        <input type="file" value={file} onChange={(e) => setfile(e.target.value)} className="form-control" />
-                        <label>Your Current Working projects</label>
-                        <input type="text" value={projects} onChange={(e) => setprojects(e.target.value)} className="form-control" />
-                        <label>Note</label>
-                        <input type="text" value={note} onChange={(e) => setnote(e.target.value)} className="form-control" />
-                        {/* <br></br><button onClick={addLeave} className="btn btn-primary">Submit</button> */}
-                        <div className="form-submit">
-                            {/* <input type="hidden" name="id"> */}
-                            <input type="submit" className="btn btn-primary" name="leave" onClick={addLeave} value="Submit" />
-                        </div>
+                        </div >
                     </div>
-                </div >
+                </section >
             </div>
-        </div>
-        // </div >
+        </ >
 
     )
 }

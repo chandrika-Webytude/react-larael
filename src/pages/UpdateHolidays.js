@@ -1,31 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import http from './http'
+import Header from './Header'
+import Sidebar from './Sidebar'
+
 
 export default function Edit(props) {
-
     const navigate = useNavigate();
+    const [inputs, setInputs] = useState({});
     const { id } = useParams();
-    const [data, dataSet] = useState([])
-    const [date, setdate] = useState("");
-    const [holiday, setholiday] = useState("");
 
-    const [inputs,setInputs] = useState({});
-
-
-
-
-    useEffect(()=>{
+    useEffect(() => {
         fetchUser()
-    },[]);
+    }, []);
 
-    const fetchUser= () =>{
-        // http.get('/editLeave/'+id).then((res)=>{
-          http.get('/editHoliday/'+id).then((res)=>{
+    const fetchUser = () => {
+        http.get('/editHoliday/' + id + '/edit').then((res) => {
+        // http.get('/editHoliday/' + id).then((res) => {
             setInputs({
-                date:res.data.date,
-                holiday:res.data.holiday,
-                projects:res.data.projects,
+                date: res.data.date,
+                holiday: res.data.holiday,
             });
         });
     }
@@ -33,64 +27,49 @@ export default function Edit(props) {
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        setInputs(values => ({...values,[name]:value}))
+        setInputs(values => ({ ...values, [name]: value }))
     }
 
-
-
-
-    // useEffect(() => {
-    //     getUsers()
-    // }, []);
-
-    // async function getUsers() {
-    //     let result = await fetch("http://localhost:8000/api/editHoliday/" + id, {
-    //         method: 'POST',
-    //     });
-    //     result = await result.json()
-    //     dataSet(result)
-    //     console.warn("result", result);
-    // }
-
-    async function addHoliday() {
-        let item = { date, holiday }
-        let result = await fetch("http://localhost:8000/api/updateHoliday/" + id, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }, 
-            body: JSON.stringify(item)
-        });
-        result = await result.json();
-        console.warn("result", result);
-        navigate('/Holidays');
+    const submitForm = (event) => {
+        event.preventDefault();
+        http.post('/updateHoliday/' + id, inputs).then((res) => {
+            navigate('/Holidays');
+        })
     }
-
-
     return (
-        <div>
-            <h2>Edit User</h2>
-            <div className="row">
-                <div className="col-sm-6">
-                    <div className="card p-4">
-                        <label>Date</label>
-                        <input type="date" name="date" className="form-control mb-2"
-                                value={inputs.date || ''}
-                                onChange={handleChange}
-                             />
-                        <input type="date" value={data.date} onChange={(e) => setdate(e.target.value)} className="form-control" />
-                        <label>holiday</label>
-                        <input type="holiday" name="holiday" className="form-control mb-2"
-                                value={inputs.holiday || ''}
-                                onChange={handleChange}
-                             />
-                        <input type="text" value={data.holiday} onChange={(e) => setholiday(e.target.value)} className="form-control" />
-                        <br></br><input type="submit" className="btn btn-primary" name="holidays" onClick={addHoliday} value="Submit" />
+
+        <section className="main">
+            <Header />
+            <div className="dashboard">
+                <Sidebar />
+                <div className="dashboard-main">
+                    <div className="dashboard-form">
+                        <div className="table-top">
+                            <div className="page-title">
+                                <h2>Update Holiday</h2>
+                            </div>
+                        </div>
+                        <form name="leave_form" method="POST" action="" className="row" >
+                            <div className="date">
+                                <label htmlFor="" className="form-label">Date</label>
+                                <input type="date" id="FromDate" name="date" value={inputs.date || ''} onChange={handleChange} />
+                            </div>
+
+                            <div className="holiday">
+                                <label htmlFor="" className="form-label">Holiday</label>
+                                <input type="text" name="holiday" value={inputs.holiday || ''} onChange={handleChange} />
+                            </div>
+
+                            <div className="form-submit">
+                                {/* <input type="submit" className="btn btn-primary" name="leave" onClick={submitForm} /> */}
+                                <br></br><button type="button" onClick={submitForm} className="btn btn-primary">Update</button>
+
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </section >
 
     )
 }

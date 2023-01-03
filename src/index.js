@@ -4,6 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+// //  Main CSS 
+// import './assets/css/style.css';
+// // Font Icons
+// import './assets/font-icon/css/all.min.css';
+// // Favicon
+// import './assets/images/Fav-Icon.png';
+// // Bootstrap
+// import './assets/bootstrap/bootstrap.min.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

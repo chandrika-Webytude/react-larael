@@ -11,34 +11,58 @@ function Header() {
         history('/login');
     }
     return (
-        <>
-            <h1>21</h1>
-            <head>
-                <title>HR Webytude</title>
-                <Link rel="stylesheet" href="assets/font-icon/css/all.min.css"></Link>
-                <Link rel="icon" type="image/png" href="assets/images/Fav-Icon.png" ></Link>
-                <Link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css" ></Link>
-                <Link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css" ></Link>
-                <Link rel="stylesheet" href="assets/css/style.css" ></Link>
-            </head>
-            <body>
-                <section className="main">
-                    <div className="top-bar">
+        <div>
+            <div className="top-bar">
+                <div className="logo">
+                    {/* <a href="index.php"><img src="logo.svg" alt=""></a> */}
+                    <a href="index.php"></a>
+                </div>
+            </div>
+            {/* <Sidebar /> */}
 
-                        <div className="logo">
-                            <a href="index.php"><img src="assets/images/webytude-logo.png" alt=""></img></a>
-                        </div>
+            <Navbar bg="dark" variant="dark">
+                <Navbar.Brand href="#">Navbar</Navbar.Brand>
+                <Nav className="me-auto nav_bar_wrapper">
+                    {
+                        localStorage.getItem('user-info') ?
+                            <>
+                                {/* <Link to='/AddHoliday'>Sidebar</Link> */}
+                                <Link to='/leave'>Leave form</Link>
+                                <Link to='/'>Leave History</Link>
+                                <Link to='/Holidays'>Holidays</Link>
+                                <Link to='/EmployeesList'>EmployeesList</Link>
+                                <Link to='/PersonalDetails'>PersonalDetails</Link>
+                                {/* <Link to='/EditHoliday'>EditHoliday</Link> */}
 
-                        <div className="logout">
-                            {/* <a href="#" className="admin"> <img style="width: 32px; border-radius: 100%;" src="admin/upload/<?php echo $emp_data['profile_photo'] ?>" alt=""></img> <i className="fa fa-caret-down" aria-hidden="true"></i></a> */}
-                            <div className="logout-password">
-                                {/* <a href="logout.php">Logout <i className="fa-solid fa-user-xmark"></i></a> */}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </body>
-        </>
+
+                                {/* <Link to='/Holidays'>Hrms Holidays</Link> */}
+                            </>
+                            :
+                            <>
+                                <Link to='/register'>Register</Link>
+                                <Link to='/login'>Login</Link>
+                            </>
+
+                    }
+                </Nav>
+                {
+                    localStorage.getItem('user-info') ?
+                        <Nav>
+                            <NavDropdown title={user && user.name}>
+                                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                                <NavDropdown.Item>Profile</NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+                        : null
+                }
+            </Navbar>
+            <div className="logout">
+                <a href="#" className="admin"> <i className="fa fa-caret-down" aria-hidden="true"></i></a>
+                <div className="logout-password">
+                    {/* <a href="logout.php">Logout <i className="fa-solid fa-user-xmark"></i></a> */}
+                </div>
+            </div>
+        </div>
 
     )
 }
